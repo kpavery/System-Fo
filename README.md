@@ -44,11 +44,12 @@ The program will wait for input, and then parse and type check each line given o
 
 `tests/` is a folder containing a few fairly simple test cases to demonstrate the type checker.  
 `tests/affine.fo` demonstrates the use of affine types for function parameters.  
-`tests/badargument.fo` demonstates a type checking failure when a lambda function argument has an incorrect type.  
+`tests/badargument.fo` demonstates a type error when a lambda function argument has an incorrect type.  
+`tests/call-nonfunction.fo` demonstrates a type error when a non-function is applied to an argument.  
 `tests/curry.fo` demonstrates affine function currying.  
-`tests/linear-mixed.fo` demonstrates a type checking failure when linear and affine types are mixed in a way which violates the typing rules.  
+`tests/linear-mixed.fo` demonstrates a type errpr when linear and affine types are mixed in a way which violates the typing rules.  
 `tests/linear-simple.fo` demonstrates a linear (consuming) generic identity function.  
-`tests/linear-twice.fo` demonstrates a type checking failure when using a linearly typed variable twice.  
+`tests/linear-twice.fo` demonstrates a type errpr when using a linearly typed variable twice.  
 `tests/simple.fo` demonstrates an affine (non-consuming) generic identity function.  
 `tests/tapp.fo` demonstrates type application.  
 `tests/type.fo` demonstrates more complicated parameter types and type application combined.
