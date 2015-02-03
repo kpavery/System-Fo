@@ -61,7 +61,7 @@ And one rule is modified:
 - Function application has added parentheses around the function. For example: `(λx:⭑.x) 4`
 
 An image showing the Typing and kinding rules is below.  
-<img src="https://raw.githubusercontent.com/kpavery/System-Fo/master/rules/syntax.png" alt="Syntax Rules" height="180" />
+<img src="https://raw.githubusercontent.com/kpavery/System-Fo/master/rules/syntax.png" alt="Syntax Rules" height="155" />
 
 
 ### Typing and Kinding Rules
@@ -69,4 +69,4 @@ An image showing the Typing and kinding rules is below.
 The typing and kinding rules for System Fo can be found at the top of page 4 of the above mentioned paper. The implementation includes annotation showing where each typing or kinding rule is important, excluding the set operation definitions.
 
 An image showing the Typing and kinding rules is below.  
-<img src="https://raw.githubusercontent.com/kpavery/System-Fo/master/rules/typing-kinding.png" alt="Typing and Kinding Rules" height="300" />
+<img src="https://raw.githubusercontent.com/kpavery/System-Fo/master/rules/typing-kinding.png" alt="Typing and Kinding Rules" height="259" />
