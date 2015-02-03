@@ -64,9 +64,9 @@ An image showing the Typing and kinding rules is below.
 <img src="https://raw.githubusercontent.com/kpavery/System-Fo/master/rules/syntax.png" alt="Syntax Rules" height="155" />
 
 
-### Typing and Kinding Rules
+### Kinding and Typing Rules
 
-The typing and kinding rules for System Fo can be found at the top of page 4 of the above mentioned paper. The implementation includes annotation showing where each typing or kinding rule is important, excluding the set operation definitions.
+The kinding and typing rules for System Fo can be found at the top of page 4 of the above mentioned paper. The implementation includes annotation showing where each typing or kinding rule is important, excluding the set operation definitions.
 
-An image showing the Typing and kinding rules is below.  
-<img src="https://raw.githubusercontent.com/kpavery/System-Fo/master/rules/typing-kinding.png" alt="Typing and Kinding Rules" height="259" />
+An image showing the kinding and typing rules is below.  
+<img src="https://raw.githubusercontent.com/kpavery/System-Fo/master/rules/typing-kinding.png" alt="Kinding and Typing Rules" height="259" />
