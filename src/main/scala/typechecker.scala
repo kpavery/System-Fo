@@ -214,7 +214,11 @@ object TypeChecker {
 				context.gamma.get(x) match {
 					// Rule: T-UVAR
 					case Some(t) => {
-						return (Some(t), context)
+						if (context.delta.isEmpty) {
+							(Some(t), context)
+						} else {
+							(None, context)
+						}
 					}
 					// If the variable is not affine, determine whether it is linear 
 					case None => { 
