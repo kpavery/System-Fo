@@ -106,6 +106,7 @@ object TypeChecker {
 					context.getKind(t1) match {
 						case Some(kt1) => {
 							// Apply B-LIN or B-UN to produce new context
+							// Condition: x not in Gamma, Delta
 							context.delta.get(x) match {
 								case None => {
 									context.gamma.get(x) match {
