@@ -1,0 +1,19 @@
+# CS290C: Implementing Linear Types in System Fo
+#
+# Keith Avery, Winter 2015
+#
+# git Ignore
+#
+
+# OS X
+.DS_Store
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# SBT
+target/
+
+# Scala
+*.class
