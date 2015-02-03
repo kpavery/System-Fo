@@ -152,22 +152,26 @@ object TypeChecker {
 				// Condition: Gamma;Delta_2 derives e_2:t_1
 				// Make sure to use new context, since Delta_1 and Delta_2 are a split of Delta.
 				val (pt, paramcontext) = check(e2, functioncontext)
-				ft match {
-					// Condition Continued: Gamma;Delta_1 derives e_1:(t_1 ->k t_2)
-					case Some(KindArrow(t1, t2, k)) => {
-						pt match {
-							// Condition Continued: Gamma;Delta_2 derives e_2:t_1
-							case Some(pt) => {
-								if (t1 == pt) {
-									(Some(t2), paramcontext)
-								} else {
-									(None, context)
+				if (!paramcontext.delta.isEmpty) {
+					(None, context)
+				} else {
+					ft match {
+						// Condition Continued: Gamma;Delta_1 derives e_1:(t_1 ->k t_2)
+						case Some(KindArrow(t1, t2, k)) => {
+							pt match {
+								// Condition Continued: Gamma;Delta_2 derives e_2:t_1
+								case Some(pt) => {
+									if (t1 == pt) {
+										(Some(t2), paramcontext)
+									} else {
+										(None, context)
+									}
 								}
+								case None => (None, context)
 							}
-							case None => (None, context)
 						}
+						case _ => (None, context)
 					}
-					case _ => (None, context)
 				}
 			}
 
