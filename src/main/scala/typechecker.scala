@@ -125,11 +125,11 @@ object TypeChecker {
 							val finalcontext = kt1 match {
 								// Rule: B-LIN
 								case Linear() => {
-									Context(context.gamma, context.delta - x, context.kinds)
+									Context(context.gamma, returnedcontext.delta - x, context.kinds)
 								}
 								// Rule: B-UN
 								case Affine() => {
-									Context(context.gamma - x, context.delta, context.kinds)
+									Context(context.gamma - x, returnedcontext.delta, context.kinds)
 								}
 							}
 							// Condition Continued: Gamma';Delta' derives e:t_2
