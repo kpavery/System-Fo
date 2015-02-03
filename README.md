@@ -60,7 +60,7 @@ Two additional rules are added for greatly increased clarity:
 And one rule is modified:
 - Function application has added parentheses around the function. For example: `(λx:⭑.x) 4`
 
-An image showing the Typing and kinding rules is below.  
+An image showing the syntax rules is below.  
 <img src="https://raw.githubusercontent.com/kpavery/System-Fo/master/rules/syntax.png" alt="Syntax Rules" height="155" />
 
 
