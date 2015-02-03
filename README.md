@@ -47,7 +47,9 @@ The program will wait for input, and then parse and type check each line given o
 `tests/badargument.fo` demonstates a type error when a lambda function argument has an incorrect type.  
 `tests/call-nonfunction.fo` demonstrates a type error when a non-function is applied to an argument.  
 `tests/curry.fo` demonstrates affine function currying.  
+`tests/duplicate.fo` demonstrates a type error when a name is used more than once.  
 `tests/linear-mixed.fo` demonstrates a type error when linear and affine types are mixed in a way which violates the typing rules.  
+`tests/linear-ordered.fo` demonstrates a type error when an unrestricted variable is used without using all linear variables first.  
 `tests/linear-simple.fo` demonstrates a linear (consuming) generic identity function.  
 `tests/linear-twice.fo` demonstrates a type error when using a linearly typed variable twice.  
 `tests/linear-unused.fo` demonstrates a type error when applying a function without using a linearly typed variable.  
