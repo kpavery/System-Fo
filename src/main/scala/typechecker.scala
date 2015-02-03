@@ -106,47 +106,47 @@ object TypeChecker {
 					context.getKind(t1) match {
 						case Some(kt1) => {
 							// Apply B-LIN or B-UN to produce new context
-							val newcontext = kt1 match {
-								// Rule: B-LIN
-								case Linear() => {
-									context.delta.get(x) match {
-										case None    => Some(Context(context.gamma, context.delta + (x -> t1), context.kinds))
-										case Some(_) => None
-									}
-								}
-								// Rule B-UN
-								case Affine() => {
+							context.delta.get(x) match {
+								case None => {
 									context.gamma.get(x) match {
-										case None    => Some(Context(context.gamma + (x -> t1), context.delta, context.kinds))
-										case Some(_) => None
-									}
-								}
-							}
-							newcontext match {
-								case Some(newcontext) => {
-									// Condition: Gamma';Delta' derives e:t_2
-									val (t2, returnedcontext) = check(e, newcontext)
+										case None => {
+											val newcontext = kt1 match {
+												// Rule: B-LIN
+												case Linear() => {
+													Context(context.gamma, context.delta + (x -> t1), context.kinds)
+												}
+												// Rule B-UN
+												case Affine() => {
+													Context(context.gamma + (x -> t1), context.delta, context.kinds)
+												}
+											}
+											// Condition: Gamma';Delta' derives e:t_2
+											val (t2, returnedcontext) = check(e, newcontext)
 
-									// Apply B-LIN or B-UN to restore original context, but by subtracting added term.
-									// This allows us to preserve the removal of linear terms removed *while* checking e.
-									val finalcontext = kt1 match {
-										// Rule: B-LIN
-										case Linear() => {
-											Context(context.gamma, returnedcontext.delta - x, context.kinds)
+											// Apply B-LIN or B-UN to restore original context, but by subtracting added term.
+											// This allows us to preserve the removal of linear terms removed *while* checking e.
+											val finalcontext = kt1 match {
+												// Rule: B-LIN
+												case Linear() => {
+													Context(context.gamma, returnedcontext.delta - x, context.kinds)
+												}
+												// Rule: B-UN
+												case Affine() => {
+													Context(context.gamma - x, returnedcontext.delta, context.kinds)
+												}
+											}
+											// Condition Continued: Gamma';Delta' derives e:t_2
+											t2 match {
+												case Some(t2) => (Some(KindArrow(t1, t2, k)), finalcontext)
+												case None => (None, finalcontext)
+											}
 										}
-										// Rule: B-UN
-										case Affine() => {
-											Context(context.gamma - x, returnedcontext.delta, context.kinds)
-										}
-									}
-									// Condition Continued: Gamma';Delta' derives e:t_2
-									t2 match {
-										case Some(t2) => (Some(KindArrow(t1, t2, k)), finalcontext)
-										case None => (None, finalcontext)
+										case Some(_) => (None, context)
 									}
 								}
-								case None => (None, context)
+								case Some(_) => (None, context)
 							}
+
 						}
 						case None => (None, context)
 					}
