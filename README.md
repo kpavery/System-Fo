@@ -12,6 +12,11 @@ The implementation was designed with the following tools, which are necessary to
 - Java 1.7
 - Mac OS X 10.10.2
 
+If you use Homebrew:
+```
+brew install sbt scala
+```
+
 ### Build and Run
 
 To build the code:
