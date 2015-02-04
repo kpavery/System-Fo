@@ -62,7 +62,7 @@ object Parser extends StandardTokenParsers with PackratParsers {
 	lazy val upperlambda       = "Λ" ~ ident ~ ":" ~ kind ~ "." ~ value ^^ { case _ ~ a ~ _ ~ k ~ _ ~ v => TypeLambda(a, k, v) }
 
 	// Rule k -> ⭑ | ○
-	lazy val kind              = "*" ^^^ Affine() | "⭑" ^^^ Affine() | "○" ^^^ Linear()
+	lazy val kind              = "*" ^^^ Unrestricted() | "⭑" ^^^ Unrestricted() | "○" ^^^ Linear()
 
 	// Rule t -> a | t ->k t | forall a:k . t | (t)
 	// Parenthesized types are added for convenience

@@ -23,9 +23,9 @@ To build the code:
 ```
 sbt compile
 ```
-To run the code on a test case (`tests/affine.fo` in this example):
+To run the code on a test case (`tests/unrestricted.fo` in this example):
 ```
-sbt 'run tests/affine.fo'
+sbt 'run tests/unrestricted.fo'
 ```
 The program outputs the AST and either the type of the whole expression, or a message stating that the expression is not well-typed.
 
@@ -43,17 +43,17 @@ The program will wait for input, and then parse and type check each line given o
 `typechecker.scala` contains the System Fo type checker. This is the main interest of the implementation.
 
 `tests/` is a folder containing a few fairly simple test cases to demonstrate the type checker.  
-`tests/affine.fo` demonstrates the use of affine types for function parameters.  
+`tests/unrestricted.fo` demonstrates the use of unrestricted types for function parameters.  
 `tests/badargument.fo` demonstates a type error when a lambda function argument has an incorrect type.  
 `tests/call-nonfunction.fo` demonstrates a type error when a non-function is applied to an argument.  
-`tests/curry.fo` demonstrates affine function currying.  
+`tests/curry.fo` demonstrates unrestricted function currying.  
 `tests/duplicate.fo` demonstrates a type error when a name is used more than once.  
-`tests/linear-mixed.fo` demonstrates a type error when linear and affine types are mixed in a way which violates the typing rules.  
+`tests/linear-mixed.fo` demonstrates a type error when linear and unrestricted types are mixed in a way which violates the typing rules.  
 `tests/linear-ordered.fo` demonstrates a type error when an unrestricted variable is used without using all linear variables first.  
 `tests/linear-simple.fo` demonstrates a linear (consuming) generic identity function.  
 `tests/linear-twice.fo` demonstrates a type error when using a linearly typed variable twice.  
 `tests/linear-unused.fo` demonstrates a type error when applying a function without using a linearly typed variable.  
-`tests/simple.fo` demonstrates an affine (non-consuming) generic identity function.  
+`tests/simple.fo` demonstrates an unrestricted (non-consuming) generic identity function.  
 `tests/tapp.fo` demonstrates type application.  
 `tests/type.fo` demonstrates more complicated parameter types and type application combined.
 

@@ -15,8 +15,8 @@ sealed abstract class Type extends Node { def pretty = toString }
 sealed abstract class Expression extends Node
 sealed abstract class Value extends Expression
 
-// Define affine and linear kinds, with pretty printing
-case class Affine() extends Kind {
+// Define unrestricted and linear kinds, with pretty printing
+case class Unrestricted() extends Kind {
 	override def pretty = { "⭑" }
 }
 case class Linear() extends Kind {

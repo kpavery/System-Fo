@@ -7,8 +7,9 @@
 
 package systemfo
 
-// Class that represents a typing context. The context is separated into an affine typing context (gamma),
-// a linear typing context (delta), and a kinding context (kinds).
+// Class that represents a typing context. The context is separated into an
+// unrestricted typing context (gamma), a linear typing context (delta),
+// and a kinding context (kinds).
 case class Context(gamma:Map[String, Type], delta:Map[String, Type], kinds:Map[Type, Kind]) {
 	// Function to get the kind of a type. Begins by trying to lookup the kind directly, and then
 	// proceeds to try and use the TVAR, ALL, and ARR kinding rules. Returns an optional kind.
@@ -69,8 +70,8 @@ object TypeChecker {
 	}
 
 	// Function to check a given AST node with a given typing context. The typing context consists of
-	// an affine context, a linear context, and a kinding context. Returns an optional type and a new
-	// context.
+	// an unrestricted context, a linear context, and a kinding context. Returns an optional type and
+	// a new context.
 	def check(node:Node, context:Context) : (Option[Type], Context) = {
 		node match {
 			// Types already have a type
@@ -117,7 +118,7 @@ object TypeChecker {
 													Context(context.gamma, context.delta + (x -> t1), context.kinds)
 												}
 												// Rule B-UN
-												case Affine() => {
+												case Unrestricted() => {
 													Context(context.gamma + (x -> t1), context.delta, context.kinds)
 												}
 											}
@@ -132,7 +133,7 @@ object TypeChecker {
 													Context(context.gamma, returnedcontext.delta - x, context.kinds)
 												}
 												// Rule: B-UN
-												case Affine() => {
+												case Unrestricted() => {
 													Context(context.gamma - x, returnedcontext.delta, context.kinds)
 												}
 											}
@@ -210,7 +211,7 @@ object TypeChecker {
 			}
 
 			case Variable(x) => {
-				// Determine whether the variable is affine
+				// Determine whether the variable is unrestricted
 				context.gamma.get(x) match {
 					// Rule: T-UVAR
 					case Some(t) => {
@@ -220,7 +221,7 @@ object TypeChecker {
 							(None, context)
 						}
 					}
-					// If the variable is not affine, determine whether it is linear 
+					// If the variable is not unrestricted, determine whether it is linear 
 					case None => { 
 						context.delta.get(x) match {
 							// Rule: T-LVAR
@@ -228,7 +229,7 @@ object TypeChecker {
 								val newcontext = Context(context.gamma, context.delta - x, context.kinds)
 								return (Some(t), newcontext)
 							}
-							// If the variable is neither affine nor linear, it has no type
+							// If the variable is neither unrestricted nor linear, it has no type
 							case None => (None, context)
 						}
 					}
