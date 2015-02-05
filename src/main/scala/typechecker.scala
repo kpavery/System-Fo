@@ -130,7 +130,10 @@ object TypeChecker {
 											val finalcontext = kt1 match {
 												// Rule: B-LIN
 												case Linear() => {
-													Context(context.gamma, returnedcontext.delta - x, context.kinds)
+													returnedcontext.delta.get(x) match {
+														case None => Context(context.gamma, returnedcontext.delta - x, context.kinds)
+														case Some(_) => return (None, context)
+													}
 												}
 												// Rule: B-UN
 												case Unrestricted() => {

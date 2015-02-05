@@ -43,10 +43,10 @@ The program will wait for input, and then parse and type check each line given o
 `typechecker.scala` contains the System Fo type checker. This is the main interest of the implementation.
 
 `tests/` is a folder containing a few fairly simple test cases to demonstrate the type checker.  
-`tests/unrestricted.fo` demonstrates the use of unrestricted types for function parameters.  
 `tests/badargument.fo` demonstates a type error when a lambda function argument has an incorrect type.  
 `tests/call-nonfunction.fo` demonstrates a type error when a non-function is applied to an argument.  
 `tests/curry.fo` demonstrates unrestricted function currying.  
+`tests/curry-unused.fo` demonstrates a type error when a linear parameter is unused in linear function currying.  
 `tests/duplicate.fo` demonstrates a type error when a name is used more than once.  
 `tests/linear-mixed.fo` demonstrates a type error when linear and unrestricted types are mixed in a way which violates the typing rules.  
 `tests/linear-ordered.fo` demonstrates a type error when an unrestricted variable is used without using all linear variables first.  
@@ -56,6 +56,7 @@ The program will wait for input, and then parse and type check each line given o
 `tests/simple.fo` demonstrates an unrestricted (non-consuming) generic identity function.  
 `tests/tapp.fo` demonstrates type application.  
 `tests/type.fo` demonstrates more complicated parameter types and type application combined.
+`tests/unrestricted.fo` demonstrates the use of unrestricted types for function parameters.  
 
 The `.fo` file extension is used for System Fo source files.
 
