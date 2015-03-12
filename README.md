@@ -1,4 +1,4 @@
-# System Fo
+# System F◦
 An implementation of a parser and type checker for a "lightweight" linear type system that extends System F. The system was introduced in "Lightweight Linear Types in System F◦" by _Karl Mazurak_, _Jianzhou Zhao_, and _Steve Zdancewic_.
 
 **Scala** is used as the implementation language. Parser combinators are used to handle parsing.
