@@ -38,6 +38,7 @@ The program will wait for input, and then parse and type check each line given o
 ### Structure
 
 `ast.scala` contains the definition of the AST nodes for the System Fo syntax.  
+`error.scala` containts the definition of the possible errors, including parse and type check errors.
 `main.scala` contains the main driver.  
 `parser.scala` contains the System Fo parser, which utilizes Scala parser combinators.  
 `typechecker.scala` contains the System Fo type checker. This is the main interest of the implementation.
