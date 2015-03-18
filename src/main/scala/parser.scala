@@ -29,13 +29,10 @@ object Parser extends StandardTokenParsers with PackratParsers {
 		val result = phrase(expression)(lexer)
 
 		result match {
-			case Success(ast, _) => Some(ast)
+			case Success(ast, _) => Left(ast)
 			case NoSuccess(message, next) => {
 				// Print full error message with position
-				println("Parse error: " + message)
-				println("At line " + next.pos.line + ", column " + next.pos.column)
-				println(next.pos.longString)
-				None
+				Right(ParseError("At line " + next.pos.line + ", column " + next.pos.column + "\n" + next.pos.longString))
 			}
 		}
 	}

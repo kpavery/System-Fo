@@ -45,7 +45,7 @@ case class Context(gamma:Map[String, Type], delta:Map[String, Type], kinds:Map[T
 object TypeChecker {
 	// Entry point function to check a given AST node. It creates an empty context and calls the
 	// real check function. Returns an optional type, which comes from the call.
-	def check(node:Node):Option[Type] = {
+	def check(node:Node):Either[Type, Error] = {
 		val initial = Context(Map[String, Type](), Map[String, Type](), Map[Type, Kind]())
 		check(node, initial)._1
 	}
@@ -72,10 +72,10 @@ object TypeChecker {
 	// Function to check a given AST node with a given typing context. The typing context consists of
 	// an unrestricted context, a linear context, and a kinding context. Returns an optional type and
 	// a new context.
-	def check(node:Node, context:Context) : (Option[Type], Context) = {
+	def check(node:Node, context:Context) : (Either[Type, Error], Context) = {
 		node match {
 			// Types already have a type
-			case t:Type => (Some(t), context)
+			case t:Type => (Left(t), context)
 
 			// Rule: T-TLAM
 			case TypeLambda(a, k, v) => {
@@ -87,15 +87,15 @@ object TypeChecker {
 						val newcontext = Context(context.gamma, context.delta, context.kinds + (at -> k))
 						val (t, returnedcontext) = check(v, newcontext)
 						t match {
-							case Some(t) => {
+							case Left(t) => {
 								// Restore original kinds from original context 
 								val finalcontext = Context(returnedcontext.gamma, returnedcontext.delta, context.kinds)
-								(Some(ForAll(a, k, t)), finalcontext)
+								(Left(ForAll(a, k, t)), finalcontext)
 							}
-							case None => (None, context)
+							case n@Right(e) => (n, context)
 						}
 					}
-					case Some(k) => (None, context)
+					case Some(k) => (Right(TypeError("Type " + at.pretty + " has no kind")), context)
 				}
 			}
 
@@ -132,7 +132,7 @@ object TypeChecker {
 												case Linear() => {
 													returnedcontext.delta.get(x) match {
 														case None => Context(context.gamma, returnedcontext.delta - x, context.kinds)
-														case Some(_) => return (None, context)
+														case Some(_) => return (Right(TypeError("Unused linear term " + x)), context)
 													}
 												}
 												// Rule: B-UN
@@ -142,21 +142,21 @@ object TypeChecker {
 											}
 											// Condition Continued: Gamma';Delta' derives e:t_2
 											t2 match {
-												case Some(t2) => (Some(KindArrow(t1, t2, k)), finalcontext)
-												case None => (None, finalcontext)
+												case Left(t2)   => (Left(KindArrow(t1, t2, k)), finalcontext)
+												case n@Right(e) => (n, finalcontext)
 											}
 										}
-										case Some(_) => (None, context)
+										case Some(_) => (Right(TypeError("Term " + x + " already exists in unrestricted context")), context)
 									}
 								}
-								case Some(_) => (None, context)
+								case Some(_) => (Right(TypeError("Term " + x + " already exists in linear context")), context)
 							}
 
 						}
-						case None => (None, context)
+						case None => (Right(TypeError("Type " + t1.pretty + " has no kind")), context)
 					}
 				} else {
-					(None, context)
+					(Right(TypeError("Lambda has parameter of unrestricted type when linear context is non-empty")), context)
 				}
 			}
 
@@ -166,26 +166,27 @@ object TypeChecker {
 				val (ft, functioncontext) = check(e1, context)
 				// Condition: Gamma;Delta_2 derives e_2:t_1
 				// Make sure to use new context, since Delta_1 and Delta_2 are a split of Delta.
-				val (pt, paramcontext) = check(e2, functioncontext)
-				if (!paramcontext.delta.isEmpty) {
-					(None, context)
+				val (pt, argumentcontext) = check(e2, functioncontext)
+				if (!argumentcontext.delta.isEmpty) {
+					(Right(TypeError("Unused linear terms in T-APP")), context)
 				} else {
 					ft match {
 						// Condition Continued: Gamma;Delta_1 derives e_1:(t_1 ->k t_2)
-						case Some(KindArrow(t1, t2, k)) => {
+						case Left(KindArrow(t1, t2, k)) => {
 							pt match {
 								// Condition Continued: Gamma;Delta_2 derives e_2:t_1
-								case Some(pt) => {
+								case Left(pt) => {
 									if (t1 == pt) {
-										(Some(t2), paramcontext)
+										(Left(t2), argumentcontext)
 									} else {
-										(None, context)
+										(Right(TypeError("Argument type " + pt.pretty + " does not match parameter type " + t1.pretty)), context)
 									}
 								}
-								case None => (None, context)
+								case n@Right(e) => (n, context)
 							}
 						}
-						case _ => (None, context)
+						case n@Left(t)  => (Right(TypeError("First expression in T-APP does not have function type")), context)
+						case n@Right(e) => (n, context)
 					}
 				}
 			}
@@ -198,18 +199,19 @@ object TypeChecker {
 						// Condition: Gamma; Delta derives e:ForAll a:k . t'
 						val (et, returnedcontext) = check(e, context)
 						et match {
-							case Some(ForAll(a, k2, tprime)) => {
+							case Left(ForAll(a, k2, tprime)) => {
 								// Verify that both kappas are the same
 								if (k1 == k2) {
-									(Some(replace(tprime, a, t)), returnedcontext)
+									(Left(replace(tprime, a, t)), returnedcontext)
 								} else {
-									(None, context)
+									(Right(TypeError("Agument kind " + k1.pretty + " does not match forall bound kind " + k2.pretty)), context)
 								}
 							}
-							case _ => (None, context)
+							case n@Left(t)  => (Right(TypeError("First expression in T-TAPP does not have forall type")), context)
+							case n@Right(e) => (n, context)
 						}
 					}
-					case None => (None, context)
+					case None => (Right(TypeError("Type " + t.pretty + " has no kind")), context)
 				}
 			}
 
@@ -219,9 +221,9 @@ object TypeChecker {
 					// Rule: T-UVAR
 					case Some(t) => {
 						if (context.delta.isEmpty) {
-							(Some(t), context)
+							(Left(t), context)
 						} else {
-							(None, context)
+							(Right(TypeError("Unrestricted variable used with non-empty linear context")), context)
 						}
 					}
 					// If the variable is not unrestricted, determine whether it is linear 
@@ -230,17 +232,17 @@ object TypeChecker {
 							// Rule: T-LVAR
 							case Some(t) => {
 								val newcontext = Context(context.gamma, context.delta - x, context.kinds)
-								return (Some(t), newcontext)
+								return (Left(t), newcontext)
 							}
 							// If the variable is neither unrestricted nor linear, it has no type
-							case None => (None, context)
+							case None => (Right(TypeError("Term " + x + " not found in either linear or unrestricted contexts")), context)
 						}
 					}
 				}
 			}
 
 			// Other AST nodes have no type rules and therefore have no type
-			case _ => (None, context)
+			case _ => (Right(TypeError("AST node has no typing rule")), context)
 		}
 	}
 }
