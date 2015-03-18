@@ -9,10 +9,11 @@ The implementation was designed with the following tools, which are necessary to
 
 - **Scala 2.11.5**. Other versions of Scala may or may not work correctly.
 - **sbt 0.13.7**
-- Java 1.7
-- Mac OS X 10.10.2
+- Java 1.7. Other versions of Java may or may not work correctly.
 
-If you use Homebrew:
+The implementation was tested on Mac OS X 10.10.3 but should work on other UNIX-like operating systems including Linux.
+
+If you use Homebrew, you can install Scala and sbt with:
 ```
 brew install sbt scala
 ```
