@@ -10,7 +10,7 @@ import scala.io.Source
 import java.io.FileNotFoundException
 import java.io.IOException
 
-import systemfo._
+import systemfo.{Error, Type, Parser, TypeChecker}
 
 object SystemFO {
 	// Entry point

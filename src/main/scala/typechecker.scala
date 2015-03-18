@@ -88,7 +88,7 @@ object TypeChecker {
 						val (t, returnedcontext) = check(v, newcontext)
 						t match {
 							case Left(t) => {
-								// Restore original kinds from original context 
+								// Restore original kinds from original context
 								val finalcontext = Context(returnedcontext.gamma, returnedcontext.delta, context.kinds)
 								(Left(ForAll(a, k, t)), finalcontext)
 							}
@@ -231,13 +231,13 @@ object TypeChecker {
 							(Right(TypeError("Unrestricted variable used with non-empty linear context")), context)
 						}
 					}
-					// If the variable is not unrestricted, determine whether it is linear 
-					case None => { 
+					// If the variable is not unrestricted, determine whether it is linear
+					case None => {
 						context.delta.get(x) match {
 							// Rule: T-LVAR
 							case Some(t) => {
 								val newcontext = Context(context.gamma, context.delta - x, context.kinds)
-								return (Left(t), newcontext)
+								(Left(t), newcontext)
 							}
 							// If the variable is neither unrestricted nor linear, it has no type
 							case None => (Right(TypeError("Term " + x + " not found in either linear or unrestricted contexts")), context)
