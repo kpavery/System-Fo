@@ -131,19 +131,24 @@ object TypeChecker {
 												// Rule: B-LIN
 												case Linear() => {
 													returnedcontext.delta.get(x) match {
-														case None => Context(context.gamma, returnedcontext.delta - x, context.kinds)
-														case Some(_) => return (Right(TypeError("Unused linear term " + x)), context)
+														case None => Left(Context(context.gamma, returnedcontext.delta - x, context.kinds))
+														case Some(_) => Right(TypeError("Unused linear term " + x))
 													}
 												}
 												// Rule: B-UN
 												case Unrestricted() => {
-													Context(context.gamma - x, returnedcontext.delta, context.kinds)
+													Left(Context(context.gamma - x, returnedcontext.delta, context.kinds))
 												}
 											}
 											// Condition Continued: Gamma';Delta' derives e:t_2
 											t2 match {
-												case Left(t2)   => (Left(KindArrow(t1, t2, k)), finalcontext)
-												case n@Right(e) => (n, finalcontext)
+												case Left(t2)   => {
+													finalcontext match {
+														case Left(context) => (Left(KindArrow(t1, t2, k)), context)
+														case n@Right(e)    => (Right(e), context)
+													}
+												}
+												case n@Right(e) => (Right(e), context)
 											}
 										}
 										case Some(_) => (Right(TypeError("Term " + x + " already exists in unrestricted context")), context)
